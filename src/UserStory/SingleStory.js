@@ -11,7 +11,7 @@ class story extends Component {
 
     render(){
         console.log(this.props)
-        const story = this.props.story ? (
+        const { story } = this.props ? (
             <div className="story">
                 <h4 className="center">{this.props.story.title}</h4>
                 <p>{this.props.story.body}</p>
@@ -19,7 +19,7 @@ class story extends Component {
                     <button className="btn grey" onClick = {this.handleClick}>
                         Delete story
                     </button>
-                </div>
+                </div> 
             </div>
         ) : (
             <div className="center">Loading story...</div>
@@ -34,7 +34,7 @@ class story extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let id = ownProps.match.params.story_id
+  const { id } = ownProps.match.params.story_id
   return {
       story: state.stories.find(story => story.id === id)
   }
