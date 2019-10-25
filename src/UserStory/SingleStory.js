@@ -34,7 +34,7 @@ class story extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  const { id } = ownProps.match.params.story_id
+  const { id } = ownProps.story_id
   return {
       story: state.stories.find(story => story.id === id)
   }
