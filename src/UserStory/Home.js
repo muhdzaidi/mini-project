@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
-import bee from '../bee.png'
 import { connect } from 'react-redux'
 
 class Home extends Component {
@@ -12,7 +11,7 @@ class Home extends Component {
             stories.map(story => {
                 return (
                     <div className="post card" key={story.usId}>
-                        <img src={bee} alt="bumblebee"/>
+                        <img src="bee.png" alt="bumblebee"/>
                         <div className="card-content">
                                 <span className="card-title yellow-text">{story.usId} | {story.title}</span>
                             <p>{story.Questions}</p>
@@ -28,6 +27,7 @@ class Home extends Component {
             <div className="container home">
                 <h4 className="center">Interation Status</h4>
                 {storyList}
+                <h5 className="center">Color Chart</h5>
             </div>
         )
     }

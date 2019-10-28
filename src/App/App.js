@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import Navbar from './components/Navbar'
+import Navbar from '../SharedComponents/Navbar'
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
-import Home from './components/Home'
-import Entries from './components/Entries'
+import Home from '../UserStory/Home'
+import Entries from '../UserStory/Entries'
 
 class App extends Component {
   render() {

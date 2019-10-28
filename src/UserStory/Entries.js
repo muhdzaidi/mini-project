@@ -31,8 +31,6 @@ class Entries extends Component {
              <div className="container">
             <h4 className="center">Input User Story</h4>
 
-                <p className="center">Insert new story details here.</p>
-
                 <div className="input-field center col s6">
                     <form onSubmit= {this.handleSubmit}>
                         <label for="date">Date:</label>
