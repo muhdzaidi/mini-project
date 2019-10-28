@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import validate from 'validate.js'
 
 const initialState = {
     date: null,
@@ -18,47 +19,58 @@ const initialState = {
 class Entries extends Component {
     constructor(props){
         super(props)
-        this.state= {
+        this.state = {
             initialState
         }
     }
 
-    validate = () => {
-        let dateError = ""
-        let ownerError = ""
-        let usIdError = ""
-        let titleError = ""
+    constraints = {
+        date: {
+            presence:true,
+            message: "Please choose a date"
+        },
+        owner: {
+            presence:true,
+            message: "Please provide an owner"
+        },
+        usId: {
+            presence:true,
+            message: "Please provide the story ID"
+        },
+        title: {
+            presence:true,
+            message: "Please provide the story title"
+        }
+    }
 
-        if(!this.state.dateError) {
-            dateError = "Please choose a date"
-        }
-        if(!this.state.ownerError) {
-            ownerError = "Please provide a name"
-        }
-        if(!this.state.usIdError) {
-            usIdError = "Please enter a Story ID"
-        }
-        if(!this.state.titleError) {
-            titleError = "Please enter a title"
-        }
+    validate() {
+        const dateError = validate('date', this.state.date)
+        const ownerError = validate('owner', this.state.owner)
+        const usIdError = validate('usId', this.state.usId)
+        const titleError = validate('title', this.state.title)
 
-        if(dateError || ownerError || usIdError || titleError){
-            this.setState({dateError, ownerError, usIdError, titleError})
-            return false;
-        }
+        this.setState({
+            dateError: dateError,
+            ownerError: ownerError,
+            usIdError: usIdError,
+            titleError: titleError
+        })
         
-        return true;
+        if(dateError || ownerError || usIdError || titleError){
+            return false
+        }
+
+        return true
     }
 
     handleSubmit = (event) => {
         event.preventDefault()
         const isValid = this.validate()
-        if (isValid){
-            console.log("Passed validation")
+        if (isValid) {
+            console.log("data taken, reset fields")
             this.setState(initialState)
         }
-        console.log(this.state)
-
+        console.log("validation failed", this.state.dateError)
     }
 
     handleInputChange = (event) => {
@@ -73,7 +85,7 @@ class Entries extends Component {
             <h4 className="center">Input User Story</h4>
 
                 <div className="input-field center col s6">
-                    <form onSubmit= {this.handleSubmit}>
+                    <form id="form" onSubmit= {this.handleSubmit}>
                         <label for="date">Date:</label>
                         <div style={{color:"red"}}>{this.state.dateError}</div>
                         <input placeholder="Date" id="date" type="date" className="validate" onChange={this.handleInputChange}/>
@@ -92,11 +104,9 @@ class Entries extends Component {
                         <input placeholder="Title" id="title" type="text" className="validate" onChange={this.handleInputChange}/>
                         
                         <label for="question">Question:</label>
-                        <div style={{color:"red"}}>{this.state.questionError}</div>
                         <textarea placeholder="Question" id="question" className="materialize-textarea" onChange={this.handleInputChange}></textarea>
 
                         <label for="note">Note:</label>
-                        <div style={{color:"red"}}>{this.state.noteError}</div>
                         <textarea placeholder="Note" id="note" className="materialize-textarea" onChange={this.handleInputChange}></textarea>
 
                         <button className="btn yellow darken-2">
