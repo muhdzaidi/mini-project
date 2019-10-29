@@ -16,6 +16,21 @@ const initialState = {
     titleError: "",
 }
 
+const constraints = {
+    date: {
+        presence:true,
+    },
+    owner: {
+        presence:true,
+    },
+    usId: {
+        presence:true,
+    },
+    title: {
+        presence:true,
+    }
+}
+
 class Entries extends Component {
     constructor(props){
         super(props)
@@ -24,42 +39,18 @@ class Entries extends Component {
         }
     }
 
-    constraints = {
-        date: {
-            presence:true,
-            message: "Please choose a date"
-        },
-        owner: {
-            presence:true,
-            message: "Please provide an owner"
-        },
-        usId: {
-            presence:true,
-            message: "Please provide the story ID"
-        },
-        title: {
-            presence:true,
-            message: "Please provide the story title"
-        }
-    }
-
     validate() {
-        const dateError = validate('date', this.state.date)
-        const ownerError = validate('owner', this.state.owner)
-        const usIdError = validate('usId', this.state.usId)
-        const titleError = validate('title', this.state.title)
+        const error = validate({date: this.state.date, owner: this.state.owner, usId: this.state.usId, title: this.state.title}, constraints)
 
-        this.setState({
-            dateError: dateError,
-            ownerError: ownerError,
-            usIdError: usIdError,
-            titleError: titleError
-        })
-        
-        if(dateError || ownerError || usIdError || titleError){
+        if(error){ 
+            this.setState({
+                dateError: error.date,
+                ownerError: error.owner,
+                usIdError: error.usId,
+                titleError: error.title
+            })
             return false
         }
-
         return true
     }
 
@@ -69,8 +60,10 @@ class Entries extends Component {
         if (isValid) {
             console.log("data taken, reset fields")
             this.setState(initialState)
+            console.log(this.state.date, this.state.owner, this.state.ownerError)
+        } else {
+            console.log(this.state.error, "Incomplete form, see error")
         }
-        console.log("validation failed", this.state.dateError)
     }
 
     handleInputChange = (event) => {
