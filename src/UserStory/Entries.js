@@ -81,8 +81,8 @@ class Entries extends Component {
     
     render () {
         return (
-             <div className="container">
-            <h4 className="center">Input User Story</h4>
+             <div className="container content">
+            <h5 className="center">Input User Story</h5>
 
                 <div className="input-field center col s6">
                     <form id="form" onSubmit= {this.handleSubmit}>

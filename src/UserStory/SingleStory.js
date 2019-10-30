@@ -1,20 +1,26 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { deletestory } from './Actions/deleteStory'
+import { deleteStory } from './Actions/deleteStory'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
-class story extends Component {
+class SingleStory extends Component {
 
     handleClick = () => {
-        this.props.deletestory(this.props.story.id)
+        this.props.deletestory(this.props.story.usId)
         this.props.history.push('/');
     }
 
     render(){
         console.log(this.props)
         const story = this.props.story ? (
-            <div className="story">
-                <h4 className="center">{this.props.story.title}</h4>
-                <p>{this.props.story.body}</p>
+            <div className="container">
+                <h4 className="center">{this.props.story.usId} | {this.props.story.owner}</h4>
+                <h6 className="center">{this.props.story.title}</h6>
+                <p className="center">{this.props.story.Questions}</p>
+                <p className="center">{this.props.story.note}</p>
+                
+                <ProgressBar now={this.props.story.progress} label={`${this.props.story.progress}%`}/>
+
                 <div className="center">
                     <button className="btn grey" onClick = {this.handleClick}>
                         Delete story
@@ -26,7 +32,7 @@ class story extends Component {
         )
         
         return (
-            <div className="container">
+            <div className=" content">
                 { story }
             </div>
         )
@@ -34,17 +40,17 @@ class story extends Component {
 }
 
 const mapStateToProps = (state, ownProps) => {
-  let id = ownProps.match.params.story_id
+  let id = ownProps.match.params.userstory_id
   return {
-      story: state.stories.find(story => story.id === id)
+      story: state.stories.find(story => story.usId === id)
   }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        deletestory: (id) => { dispatch(deletestory(id)) }
+        deleteStory: (usId) => { dispatch(deleteStory(usId)) }
     }
 }
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(story)
+export default connect(mapStateToProps, mapDispatchToProps)(SingleStory)
