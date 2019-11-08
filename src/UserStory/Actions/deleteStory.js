@@ -1,8 +1,6 @@
-const deleteStory = (id) => {
+export const deleteStory = (id) => {
     return {
         type: 'DELETE_STORY',
         id: id
     }
 }
-
-export const deleteStory;

@@ -18,7 +18,6 @@ code {
   right: -100px;
   opacity: 0.5;
   transform: rotate(20deg);
-  content:url('../Images/bee.png')
 }
 
 .home .post {

@@ -3,51 +3,63 @@ import { Link } from 'react-router-dom'
 import validate from 'validate.js'
 
 const initialState = {
-    storyFields: { date:"", owner:"", usId:"", title:"", question:"", note:"" },
-    fieldErrors: { dateError:"", ownerError:"", usIdError:"", titleError:"" }
-}
+    date: null,
+    owner: null,
+    usId: null,
+    title: null,
+    question: null,
+    note: null,
 
-const constraints = {
-    date: {
-        presence: {
-            allowEmpty : false
-        }
-    },
-    owner: {
-        presence: {
-            allowEmpty : false
-        }
-    },
-    usId: {
-        presence: {
-            allowEmpty : false
-        }
-    },
-    title: {
-        presence: {
-            allowEmpty : false
-        }
-    }
+    dateError: "",
+    ownerError: "",
+    usIdError: "",
+    titleError: "",
 }
 
 class Entries extends Component {
     constructor(props){
         super(props)
-        this.state = initialState;
+        this.state = {
+            initialState
+        }
+    }
+
+    constraints = {
+        date: {
+            presence:true,
+            message: "Please choose a date"
+        },
+        owner: {
+            presence:true,
+            message: "Please provide an owner"
+        },
+        usId: {
+            presence:true,
+            message: "Please provide the story ID"
+        },
+        title: {
+            presence:true,
+            message: "Please provide the story title"
+        }
     }
 
     validate() {
-        const error = validate(this.state.storyFields, constraints)
+        const dateError = validate('date', this.state.date)
+        const ownerError = validate('owner', this.state.owner)
+        const usIdError = validate('usId', this.state.usId)
+        const titleError = validate('title', this.state.title)
 
-        if(error){ 
-            this.setState({
-                dateError: error.date,
-                ownerError: error.owner,
-                usIdError: error.usId,
-                titleError: error.title
-            })
+        this.setState({
+            dateError: dateError,
+            ownerError: ownerError,
+            usIdError: usIdError,
+            titleError: titleError
+        })
+        
+        if(dateError || ownerError || usIdError || titleError){
             return false
         }
+
         return true
     }
 
@@ -55,49 +67,47 @@ class Entries extends Component {
         event.preventDefault()
         const isValid = this.validate()
         if (isValid) {
-            console.log("Data taken, reset field")
-            this.setState(initialState);
-        } else {
-            console.log(this.state.error, "Incomplete form, see error")
+            console.log("data taken, reset fields")
+            this.setState(initialState)
         }
+        console.log("validation failed", this.state.dateError)
     }
 
     handleInputChange = (event) => {
-        const { id, value } = event.target;
-        this.setState((prevState) => {
-            const { storyFields, fieldErrors } = prevState;
-            return { storyFields: { ...storyFields,  [id]: value}, fieldErrors:{ ...fieldErrors, [id]: value}};
-        });
+        this.setState({
+            [event.target.id]: event.target.value
+        })
     }
     
     render () {
         return (
-             <div className="container">
-            <h4 className="center">Input User Story</h4>
+             <div className="container content">
+            <h5 className="center">Input User Story</h5>
 
                 <div className="input-field center col s6">
                     <form id="form" onSubmit= {this.handleSubmit}>
                         <label for="date">Date:</label>
-                        {this.state.dateError && <div style={{color:"red"}}>{this.state.dateError}</div> }
-                        <input placeholder="Date" id="date" type="date" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.date}/>
+                        <div style={{color:"red"}}>{this.state.dateError}</div>
+                        <input placeholder="Date" id="date" type="date" className="validate" onChange={this.handleInputChange}/>
                          
                          <label for="first_name">Owner:</label>
-                         {this.state.ownerError && <div style={{color:"red"}}>{this.state.ownerError}</div> }
-                        <input placeholder="Owner" id="owner" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.owner}/>
+                         <div style={{color:"red"}}>{this.state.ownerError}</div>
+                        <input placeholder="Owner" id="owner" type="text" className="validate" onChange={this.handleInputChange}/>
                         
                          <label for="story_id">Story ID:</label>
-                         {this.state.usIdError && <div style={{color:"red"}}>{this.state.usIdError}</div> }
-                        <input placeholder="Story id" id="usId" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.usId}/>
+                         <div style={{color:"red"}}>{this.state.usIdError}</div>
+                        <input placeholder="Story id" id="usId" type="text" className="validate" onChange={this.handleInputChange}/>
                         
+
                         <label for="title">Title:</label>
-                        {this.state.titleError && <div style={{color:"red"}}>{this.state.titleError}</div>}
-                        <input placeholder="Title" id="title" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.title}/>
+                        <div style={{color:"red"}}>{this.state.titleError}</div>
+                        <input placeholder="Title" id="title" type="text" className="validate" onChange={this.handleInputChange}/>
                         
                         <label for="question">Question:</label>
-                        <textarea placeholder="Question" id="question" className="materialize-textarea" onInput={this.handleInputChange} value={this.state.storyFields.question} ></textarea>
+                        <textarea placeholder="Question" id="question" className="materialize-textarea" onChange={this.handleInputChange}></textarea>
 
                         <label for="note">Note:</label>
-                        <textarea placeholder="Note" id="note" className="materialize-textarea" onInput={this.handleInputChange} value={this.state.storyFields.note} ></textarea>
+                        <textarea placeholder="Note" id="note" className="materialize-textarea" onChange={this.handleInputChange}></textarea>
 
                         <button className="btn yellow darken-2">
                             Submit

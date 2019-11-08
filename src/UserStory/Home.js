@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
+import bee from '../Images/bee.png'
 import { connect } from 'react-redux'
 import ProgressBar from 'react-bootstrap/ProgressBar'
 
