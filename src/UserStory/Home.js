@@ -2,21 +2,26 @@ import React, { Component } from 'react'
 import { Link } from 'react-router-dom'
 import bee from '../Images/bee.png'
 import { connect } from 'react-redux'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 class Home extends Component {
     
     render(){
         const { stories } = this.props;
-        console.log(stories)
+
         const storyList = stories.length ? (
             stories.map(story => {
                 return (
                     <div className="post card" key={story.usId}>
-                        <img src={bee} alt="bumblebee"/>
-                        <div className="card-content">
-                                <span className="card-title yellow-text">{story.usId} | {story.title}</span>
-                            <p>{story.Questions}</p>
-                        </div>
+                        <Link to= {'/' + story.usId}>
+                            <div className="card-content">
+                                    <img src={bee} alt="bumblebee"/>
+                                    <span className="card-title black-text">{story.usId} | {story.owner}</span>
+                                <h6>{story.title}</h6>
+                                <ProgressBar now={story.progress} label={`${story.progress}%`} />
+                                
+                            </div>
+                        </Link>
                     </div>
                 )
             })
@@ -25,8 +30,8 @@ class Home extends Component {
         )
 
         return (
-            <div className="container home">
-                <h4 className="center">Interation Status</h4>
+            <div className="container home content">
+                <h5 className="center">Interation Status</h5>
                 {storyList}
                 <h5 className="center">Color Chart</h5>
             </div>
