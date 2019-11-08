@@ -12,7 +12,7 @@ class SingleStory extends Component {
 
     render(){
         console.log(this.props)
-        const story = this.props.story ? (
+        const { story } = this.props ? (
             <div className="container">
                 <h4 className="center">{this.props.story.usId} | {this.props.story.owner}</h4>
                 <h6 className="center">{this.props.story.title}</h6>
@@ -25,7 +25,7 @@ class SingleStory extends Component {
                     <button className="btn grey" onClick = {this.handleClick}>
                         Delete story
                     </button>
-                </div>
+                </div> 
             </div>
         ) : (
             <div className="center">Loading story...</div>
