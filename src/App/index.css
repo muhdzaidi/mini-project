@@ -29,3 +29,9 @@ code {
 .container {
   width: 85% !important;
 }
+
+.content {
+  margin: 20px;
+}
+
+
