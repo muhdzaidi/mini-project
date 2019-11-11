@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 import validate from 'validate.js'
+import { addStory } from './Actions/addStory'
+
 
 const initialState = {
     storyFields: { date:"", owner:"", usId:"", title:"", question:"", note:"" },
@@ -55,7 +57,9 @@ class Entries extends Component {
         event.preventDefault()
         const isValid = this.validate()
         if (isValid) {
-            console.log("Data taken, reset field")
+            let newEntry =  {usId: this.state.storyFields.usId, owner:this.state.storyFields.owner, title: this.state.storyFields.title, Questions: this.state.storyFields.question, note:this.state.storyFields.note, progress:0}
+            this.props.addStory(newEntry)
+
             this.setState(initialState);
         } else {
             console.log(this.state.error, "Incomplete form, see error")
@@ -109,4 +113,11 @@ class Entries extends Component {
         ) 
     }
 }
-export default Entries
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addStory: (newEntry) => { dispatch(addStory(newEntry)) }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Entries)
