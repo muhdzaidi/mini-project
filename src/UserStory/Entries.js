@@ -3,6 +3,7 @@ import { set } from 'lodash';
 import { Link } from 'react-router-dom';
 import validate from 'validate.js';
 import InputComponent from './InputComponent';
+import { addStory } from './Actions/addStory'
 
 const fields = {
     date: {initialState: "", label:"Date:", storyFields:"", fieldErrors:"", type:"date"},
@@ -77,7 +78,9 @@ class Entries extends Component {
 
 
         if (isValid) {
-            console.log("Data taken, reset field")
+            let newEntry =  {usId: this.state.storyFields.usId, owner:this.state.storyFields.owner, title: this.state.storyFields.title, Questions: this.state.storyFields.question, note:this.state.storyFields.note, progress:0}
+            this.props.addStory(newEntry)
+
             this.setState(fields);
         } else {
             console.log(fieldErrors, "Incomplete form, see error")
@@ -96,8 +99,8 @@ class Entries extends Component {
         const stateFields = this.state;
         
         return (
-            <div className="container">
-            <h4 className="center">Input User Story</h4>
+            <div className="container content">
+            <h5 className="center">Input User Story</h5>
                 <div className="input-field center col s6">
                     <form id="form" onSubmit= {this.handleSubmit}>
 
@@ -123,4 +126,11 @@ class Entries extends Component {
         ) 
     }
 }
-export default Entries
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        addStory: (newEntry) => { dispatch(addStory(newEntry)) }
+    }
+}
+
+export default connect(null, mapDispatchToProps)(Entries)

@@ -28,3 +28,13 @@ code {
 .container {
   width: 85% !important;
 }
+
+.content {
+  margin: 20px;
+}
+
+.content-bg {
+  background-color: #f6f6f6;
+  padding:10px;
+}
+

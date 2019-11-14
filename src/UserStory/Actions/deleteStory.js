@@ -1,6 +1,6 @@
-export const deleteStory = (id) => {
+export const deleteStory = (usId) => {
     return {
         type: 'DELETE_STORY',
-        id: id
+        id: usId
     }
 }
