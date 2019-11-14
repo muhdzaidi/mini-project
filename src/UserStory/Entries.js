@@ -1,31 +1,39 @@
 import React, { Component } from 'react'
-import { connect } from 'react-redux'
-import validate from 'validate.js'
+import { set } from 'lodash';
+import { Link } from 'react-router-dom';
+import validate from 'validate.js';
+import InputComponent from './InputComponent';
 import { addStory } from './Actions/addStory'
 
-
-const initialState = {
-    storyFields: { date:"", owner:"", usId:"", title:"", question:"", note:"" },
-    fieldErrors: { dateError:"", ownerError:"", usIdError:"", titleError:"" }
+const fields = {
+    date: {initialState: "", label:"Date:", storyFields:"", fieldErrors:"", type:"date"},
+    owner: {initialState: "", label:"Owner:", storyFields:"", fieldErrors:"", type:"text"},
+    usId: {initialState: "", label:"Story ID:", storyFields:"", fieldErrors:"", type:"text"},
+    title: {initialState: "", label:"Title:", storyFields:"", fieldErrors:"", type:"text"},
+    question: {initialState: "", label:"Question:", storyFields:"", fieldErrors:"", type:"text"},
+    note: {initialState: "", label:"Note:", storyFields:"", fieldErrors:"", type:"text"},
 }
 
+const { initialState, storyFields, fieldErrors } = { ...fields }
+
+
 const constraints = {
-    date: {
+    "date.storyFields": {
         presence: {
             allowEmpty : false
         }
     },
-    owner: {
+    "owner.storyFields": {
         presence: {
             allowEmpty : false
         }
     },
-    usId: {
+    "usId.storyFields": {
         presence: {
             allowEmpty : false
         }
     },
-    title: {
+    "title.storyFields": {
         presence: {
             allowEmpty : false
         }
@@ -35,78 +43,83 @@ const constraints = {
 class Entries extends Component {
     constructor(props){
         super(props)
-        this.state = initialState;
+        this.state = {...fields};
     }
 
     validate() {
-        const error = validate(this.state.storyFields, constraints)
+        const stateFields = this.state;
+        const error = validate(stateFields, constraints)
 
-        if(error){ 
-            this.setState({
-                dateError: error.date,
-                ownerError: error.owner,
-                usIdError: error.usId,
-                titleError: error.title
+        const test = {...stateFields};
+        Object.keys(error).forEach(key => { 
+            const namePair = key.split('.');
+            const fieldName = namePair[0];
+            set(test, [fieldName, 'fieldErrors'], "");
+        })
+        this.setState(test)
+
+        if(error){
+            const newState = {...stateFields};
+            Object.keys(error).forEach(key => { 
+                const namePair = key.split('.');
+                const fieldName = namePair[0];
+                set(newState, [fieldName, 'fieldErrors'], error[key]);
             })
+            this.setState(newState);
             return false
         }
         return true
     }
+    
 
     handleSubmit = (event) => {
         event.preventDefault()
         const isValid = this.validate()
+
+
         if (isValid) {
             let newEntry =  {usId: this.state.storyFields.usId, owner:this.state.storyFields.owner, title: this.state.storyFields.title, Questions: this.state.storyFields.question, note:this.state.storyFields.note, progress:0}
             this.props.addStory(newEntry)
 
-            this.setState(initialState);
+            this.setState(fields);
         } else {
-            console.log(this.state.error, "Incomplete form, see error")
+            console.log(fieldErrors, "Incomplete form, see error")
         }
     }
 
     handleInputChange = (event) => {
         const { id, value } = event.target;
         this.setState((prevState) => {
-            const { storyFields, fieldErrors } = prevState;
-            return { storyFields: { ...storyFields,  [id]: value}, fieldErrors:{ ...fieldErrors, [id]: value}};
+            const prevFieldData = prevState[id];
+            return { [id]: { ...prevFieldData, storyFields: value }  };
         });
     }
     
     render () {
+        const stateFields = this.state;
+        
         return (
             <div className="container content">
             <h5 className="center">Input User Story</h5>
-
                 <div className="input-field center col s6">
                     <form id="form" onSubmit= {this.handleSubmit}>
-                        <label for="date">Date:</label>
-                        {this.state.dateError && <div style={{color:"red"}}>{this.state.dateError}</div> }
-                        <input placeholder="Date" id="date" type="date" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.date}/>
-                         
-                         <label for="first_name">Owner:</label>
-                         {this.state.ownerError && <div style={{color:"red"}}>{this.state.ownerError}</div> }
-                        <input placeholder="Owner" id="owner" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.owner}/>
-                        
-                         <label for="story_id">Story ID:</label>
-                         {this.state.usIdError && <div style={{color:"red"}}>{this.state.usIdError}</div> }
-                        <input placeholder="Story id" id="usId" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.usId}/>
-                        
-                        <label for="title">Title:</label>
-                        {this.state.titleError && <div style={{color:"red"}}>{this.state.titleError}</div>}
-                        <input placeholder="Title" id="title" type="text" className="validate" onInput={this.handleInputChange} value={this.state.storyFields.title}/>
-                        
-                        <label for="question">Question:</label>
-                        <textarea placeholder="Question" id="question" className="materialize-textarea" onInput={this.handleInputChange} value={this.state.storyFields.question} ></textarea>
 
-                        <label for="note">Note:</label>
-                        <textarea placeholder="Note" id="note" className="materialize-textarea" onInput={this.handleInputChange} value={this.state.storyFields.note} ></textarea>
+                        {
+                            Object.keys(fields).map(key => { 
+                                const { label, storyFields, fieldErrors, type } = stateFields[key];
+                                return <InputComponent 
+                                    label = {label}
+                                    error = {fieldErrors}
+                                    id = {key}
+                                    handleInputChange = {this.handleInputChange}
+                                    type = {type}
+                                    value = {storyFields}
+                                />
+                            })
 
-                        <button className="btn yellow darken-2">
-                            Submit
-                        </button>
-
+                        }
+                        
+                        <button className="btn yellow darken-2">Submit</button>
                     </form>
                 </div>
             </div>
