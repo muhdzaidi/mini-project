@@ -4,6 +4,8 @@ import { Link } from 'react-router-dom';
 import validate from 'validate.js';
 import InputComponent from './InputComponent';
 import { addStory } from './Actions/addStory'
+import { connect } from 'react-redux'
+
 
 const fields = {
     date: {initialState: "", label:"Date:", storyFields:"", fieldErrors:"", type:"date"},
@@ -50,14 +52,6 @@ class Entries extends Component {
         const stateFields = this.state;
         const error = validate(stateFields, constraints)
 
-        const test = {...stateFields};
-        Object.keys(error).forEach(key => { 
-            const namePair = key.split('.');
-            const fieldName = namePair[0];
-            set(test, [fieldName, 'fieldErrors'], "");
-        })
-        this.setState(test)
-
         if(error){
             const newState = {...stateFields};
             Object.keys(error).forEach(key => { 
@@ -74,12 +68,27 @@ class Entries extends Component {
 
     handleSubmit = (event) => {
         event.preventDefault()
+        const stateFields = this.state;
         const isValid = this.validate()
 
-
         if (isValid) {
-            let newEntry =  {usId: this.state.storyFields.usId, owner:this.state.storyFields.owner, title: this.state.storyFields.title, Questions: this.state.storyFields.question, note:this.state.storyFields.note, progress:0}
-            this.props.addStory(newEntry)
+            {
+                //Temporary hardcode data as im still implementing the dynamic UI update
+                let newEntry = {date: "22/12/2019", owner:"Zaidi", usId: "US202141", title: "Temporary hardcode data", question:"", note:"", progress:0}
+                this.props.addStory(newEntry)
+     
+                    // Object.keys(fields).map(key => { 
+                    //     const { storyFields } = stateFields[key];
+                    //     console.log(storyFields)
+                    //     console.log(key)
+            
+
+                    // let newEntry = {date: this.props.value.key, owner:this.props.value.key, usId: this.props.value.key, title: this.props.value.key, question:this.props.value.key, note:this.props.value.key, progress:0}
+                    // this.props.addStory(newEntry)
+
+                // })
+            }
+          
 
             this.setState(fields);
         } else {
@@ -116,7 +125,6 @@ class Entries extends Component {
                                     value = {storyFields}
                                 />
                             })
-
                         }
                         
                         <button className="btn yellow darken-2">Submit</button>
