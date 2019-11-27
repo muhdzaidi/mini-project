@@ -16,11 +16,10 @@ class SingleStory extends Component {
         
         return (
             {story} ? (
-                <div>
+                <div className="container content content-bg">
                 <h4 className="center">{this.props.story.usId} | {this.props.story.owner}</h4>
 
-                    <div className="container content content-bg">
-
+                    <div>
                         <h4 className="center">{this.props.story.title}</h4>
 
                         <p className="center">{this.props.story.Questions}</p>
@@ -29,7 +28,7 @@ class SingleStory extends Component {
                         <ProgressBar now={this.props.story.progress} label={`${this.props.story.progress}%`}/>
 
                         <div className="center">
-                            <button className="btn grey" onClick = {this.handleClick}>
+                            <button className="btn yellow darken-2" onClick = {this.handleClick}>
                                 Delete story
                             </button>
                         </div> 

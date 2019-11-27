@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import { set } from 'lodash';
-import { Link } from 'react-router-dom';
 import validate from 'validate.js';
 import InputComponent from './InputComponent';
 import { addStory } from './Actions/addStory'
@@ -13,11 +12,8 @@ const fields = {
     usId: {initialState: "", label:"Story ID:", storyFields:"", fieldErrors:"", type:"text"},
     title: {initialState: "", label:"Title:", storyFields:"", fieldErrors:"", type:"text"},
     question: {initialState: "", label:"Question:", storyFields:"", fieldErrors:"", type:"text"},
-    note: {initialState: "", label:"Note:", storyFields:"", fieldErrors:"", type:"text"},
+    note: {initialState: "", label:"Note:", storyFields:"", fieldErrors:"", type:"text"}
 }
-
-const { initialState, storyFields, fieldErrors } = { ...fields }
-
 
 const constraints = {
     "date.storyFields": {
@@ -54,17 +50,26 @@ class Entries extends Component {
 
         if(error){
             const newState = {...stateFields};
-            Object.keys(error).forEach(key => { 
-                const namePair = key.split('.');
-                const fieldName = namePair[0];
-                set(newState, [fieldName, 'fieldErrors'], error[key]);
-            })
-            this.setState(newState);
+                Object.keys(error).forEach(errorKey => {
+                    const namePair = errorKey.split('.');
+                    const fieldName = namePair[0];
+
+                    set(newState, [fieldName, 'fieldErrors'], error[errorKey]);
+                    this.setState(newState)
+
+                        // this.setState((prevState) => {
+                        //     const newState = prevState;
+                        //     Object.entries(newState).forEach((idKey) => { 
+                        //         if(idKey[1].fieldErrors !== "") {
+                        //         set(newState, [idKey[0], 'fieldErrors'], [""]);
+                        //         }
+                        //     })
+                        // });
+                })
             return false
         }
         return true
-    }
-    
+    }    
 
     handleSubmit = (event) => {
         event.preventDefault()
@@ -72,27 +77,19 @@ class Entries extends Component {
         const isValid = this.validate()
 
         if (isValid) {
+            const newEntry = {...stateFields, progress:"0"};
             {
-                //Temporary hardcode data as im still implementing the dynamic UI update
-                let newEntry = {date: "22/12/2019", owner:"Zaidi", usId: "US202141", title: "Temporary hardcode data", question:"", note:"", progress:0}
+                Object.entries(stateFields).map(key => { 
+                    const fieldsKey = key[0]
+                    set(newEntry, fieldsKey, key[1].storyFields);
+                })
+                this.setState(newEntry)
                 this.props.addStory(newEntry)
-     
-                    // Object.keys(fields).map(key => { 
-                    //     const { storyFields } = stateFields[key];
-                    //     console.log(storyFields)
-                    //     console.log(key)
-            
-
-                    // let newEntry = {date: this.props.value.key, owner:this.props.value.key, usId: this.props.value.key, title: this.props.value.key, question:this.props.value.key, note:this.props.value.key, progress:0}
-                    // this.props.addStory(newEntry)
-
-                // })
             }
-          
-
             this.setState(fields);
+            console.log("Data taken, reset fields")
         } else {
-            console.log(fieldErrors, "Incomplete form, see error")
+            console.log("Incomplete form, see error")
         }
     }
 
