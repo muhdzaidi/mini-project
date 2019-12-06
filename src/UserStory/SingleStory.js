@@ -44,7 +44,7 @@ class SingleStory extends Component {
 const mapStateToProps = (state, ownProps) => {
   let id = ownProps.match.params.userstory_id
   return {
-      story: state.stories.find(story => story.usId === id)
+      story: state.iterationWeek1.find(story => story.usId === id)
   }
 }
 

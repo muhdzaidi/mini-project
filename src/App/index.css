@@ -38,3 +38,26 @@ code {
   padding:10px;
 }
 
+.iterationBar {
+  width:12rem;
+}
+
+.arrow {
+  text-decoration: none;
+  display: inline-block;
+  padding: 8px 16px;
+  background-color: #FBC02D;
+  height: 2.8em;
+}
+
+.arrow:hover {
+  color: black;
+}
+
+.topBar {
+  margin-top: 10px;
+}
+
+.row {
+  margin-bottom: 0px !important;
+}
